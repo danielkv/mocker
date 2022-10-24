@@ -1,13 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, ObjectIdColumn } from 'typeorm';
 
 @Entity()
-export class ProjectEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+export class Project {
+  @ObjectIdColumn()
+  _id: string;
 
   @Column()
   name: string;
 
   @Column()
   path: string;
+
+  /*  @ManyToOne(() => User)
+  user: User; */
 }
