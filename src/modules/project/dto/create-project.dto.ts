@@ -8,4 +8,8 @@ export class CreateProjectDto {
   @IsString()
   @IsNotEmpty()
   path: string;
+
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
 }

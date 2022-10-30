@@ -1,16 +1,21 @@
-import { Entity, Column, ObjectIdColumn } from 'typeorm';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { BaseSchema } from 'src/shared/BaseSchema';
 
-@Entity()
-export class Project {
-  @ObjectIdColumn()
-  _id: string;
+export type ProjectDocument = Project & Document;
 
-  @Column()
+@Schema({
+  timestamps: true,
+  versionKey: false,
+})
+export class Project extends BaseSchema {
+  @Prop()
   name: string;
 
-  @Column()
+  @Prop()
   path: string;
 
-  /*  @ManyToOne(() => User)
-  user: User; */
+  @Prop()
+  userId: string;
 }
+
+export const ProjectSchema = SchemaFactory.createForClass(Project);
