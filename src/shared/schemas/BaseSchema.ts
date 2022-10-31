@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongoose';
 
 export abstract class BaseSchema {
-  _id: ObjectId;
+    _id: ObjectId;
 
-  createdAt: Date;
+    createdAt: Date;
 
-  updatedAt: Date;
+    updatedAt: Date;
 }
