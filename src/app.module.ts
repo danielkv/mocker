@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { ProjectModule } from './modules/project/project.module';
+import { ResourceModule } from './modules/resource/resource.module';
 import { UserModule } from './modules/user/user.module';
 
 @Module({
@@ -10,6 +11,7 @@ import { UserModule } from './modules/user/user.module';
     ConfigModule.forRoot(),
     ProjectModule,
     UserModule,
+    ResourceModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

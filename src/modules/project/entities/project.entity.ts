@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { BaseSchema } from 'src/shared/BaseSchema';
+import { BaseSchema } from 'src/shared/schemas/BaseSchema';
 
 export type ProjectDocument = Project & Document;
 
@@ -8,13 +8,13 @@ export type ProjectDocument = Project & Document;
   versionKey: false,
 })
 export class Project extends BaseSchema {
-  @Prop()
+  @Prop({ required: true })
   name: string;
 
-  @Prop()
+  @Prop({ required: true })
   path: string;
 
-  @Prop()
+  @Prop({ required: true })
   userId: string;
 }
 

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { BaseSchema } from 'src/shared/BaseSchema';
+import { BaseSchema } from 'src/shared/schemas/BaseSchema';
 
 export type UserDocument = User & Document;
 
@@ -14,7 +14,7 @@ export class User extends BaseSchema {
   @Prop({ required: true })
   email: string;
 
-  @Prop({ select: false })
+  @Prop({ required: true, select: false })
   password: string;
 }
 
