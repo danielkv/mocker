@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 
 import { CreateProjectDto } from './dto/create-project.dto';
+import { ProjectFilterDto } from './dto/project-filter.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
 
@@ -17,8 +18,12 @@ export class ProjectService {
     return this.projectRepository.create(createProjectDto);
   }
 
-  findAll() {
-    return this.projectRepository.find();
+  findAll(filter?: ProjectFilterDto) {
+    const query: FilterQuery<Project> = {};
+    if (filter.name) query.name = new RegExp(filter.name, 'i');
+    if (filter.userId) query.userId = filter.userId;
+
+    return this.projectRepository.find(query);
   }
 
   findOne(id: string) {

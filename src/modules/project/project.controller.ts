@@ -5,12 +5,14 @@ import {
   Body,
   Patch,
   Param,
+  Query,
   Delete,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
+import { ProjectFilterDto } from './dto/project-filter.dto';
 
 @Controller('project')
 export class ProjectController {
@@ -22,8 +24,8 @@ export class ProjectController {
   }
 
   @Get()
-  findAll() {
-    return this.projectService.findAll();
+  findAll(@Query() filter: ProjectFilterDto) {
+    return this.projectService.findAll(filter);
   }
 
   @Get(':id')
