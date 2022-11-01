@@ -15,3 +15,7 @@ export interface DataGenerator<T = any> {
 export type DataGeneratorProvider = Record<ResourceFieldType, DataGenerator>;
 
 export type GenericResourceSchema = Record<string, SchemaDefinitionProperty>;
+
+export type GeneratorOptionSingleType = boolean | string | number;
+
+export type GeneratorOptionType = Record<string, GeneratorOptionSingleType>;
