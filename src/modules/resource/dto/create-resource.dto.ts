@@ -12,6 +12,10 @@ export class CreateResourceDto {
     @IsNotEmpty()
     path: string;
 
+    @IsString()
+    @IsNotEmpty()
+    projectId: string;
+
     @ValidateNested({ each: true })
     @IsArray()
     @Type(() => CreateResourceFieldDto)

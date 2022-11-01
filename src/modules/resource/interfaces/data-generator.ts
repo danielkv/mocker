@@ -1,3 +1,5 @@
+import { SchemaDefinitionProperty, SchemaType } from 'mongoose';
+
 export type ResourceFieldType = 'string' | 'list' | 'number';
 
 export const ResourceFieldTypeArr: ResourceFieldType[] = [
@@ -11,3 +13,5 @@ export interface DataGenerator<T = any> {
 }
 
 export type DataGeneratorProvider = Record<ResourceFieldType, DataGenerator>;
+
+export type GenericResourceSchema = Record<string, SchemaDefinitionProperty>;

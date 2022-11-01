@@ -19,6 +19,12 @@ export class Resource extends BaseSchema {
 
     @Prop({ type: [ResourceFieldSchema], required: true })
     fields: ResourceField[];
+
+    @Prop({ required: true })
+    projectId: string;
+
+    @Prop({ required: true })
+    collectionName: string;
 }
 
 export const ResourceSchema = SchemaFactory.createForClass(Resource);

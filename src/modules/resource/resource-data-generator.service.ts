@@ -1,23 +1,25 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 
-import { Model, ObjectId } from 'mongoose';
+import { Connection, Model } from 'mongoose';
 
-import { MAIN_CONN } from '@shared/db/config';
+import { DATA_CONN, MAIN_CONN } from '@shared/db/config';
 
-import { GENERATORS } from '../data-generators';
-import { Resource } from '../entities/resource.entity';
-import { DataGeneratorProvider } from '../interfaces/data-generator';
+import { GENERATORS } from './data-generators';
+import { Resource } from './entities/resource.entity';
+import { DataGeneratorProvider } from './interfaces/data-generator';
+import { createGenericResourceSchema } from './utils/createGenericResourceSchema';
 
 @Injectable()
-export class GenerateResourceDataCase {
+export class ResourceDataGeneratorService {
     constructor(
         @InjectModel(Resource.name, MAIN_CONN)
         private resourceRepository: Model<Resource>,
         @Inject(GENERATORS) private generatorsProvider: DataGeneratorProvider,
+        @InjectConnection(DATA_CONN) private dataConnection: Connection,
     ) {}
 
-    async execute(resourceId: ObjectId, numberOfRows: number) {
+    async execute(resourceId: string, numberOfRows: number) {
         const resource: Resource = await this.resourceRepository.findById(
             resourceId,
         );
@@ -35,5 +37,13 @@ export class GenerateResourceDataCase {
                 return row;
             }, {});
         });
+
+        const genericSchema = createGenericResourceSchema(resource.fields);
+
+        await this.dataConnection
+            .model(resource.collectionName, genericSchema)
+            .create(data);
+
+        return data;
     }
 }

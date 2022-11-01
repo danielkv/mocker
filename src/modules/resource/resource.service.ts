@@ -16,8 +16,20 @@ export class ResourceService {
         private userRepository: Model<Resource>,
     ) {}
 
-    create(createUserDto: CreateResourceDto): Promise<Resource> {
-        return this.userRepository.create(createUserDto);
+    private createResourceCollectionName(
+        createResourceDto: CreateResourceDto,
+    ): string {
+        return `${createResourceDto.projectId}-${createResourceDto.path}`;
+    }
+
+    create(createResourceDto: CreateResourceDto): Promise<Resource> {
+        const collectionName =
+            this.createResourceCollectionName(createResourceDto);
+
+        return this.userRepository.create({
+            ...createResourceDto,
+            collectionName,
+        });
     }
 
     findAll() {
