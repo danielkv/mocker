@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
+import { ResourceFieldType } from '../interfaces/data-generator';
+
 export type ResourceDocument = ResourceField & Document;
 
 @Schema({
@@ -12,7 +14,10 @@ export class ResourceField {
     name: string;
 
     @Prop({ required: true })
-    type: string;
+    type: ResourceFieldType;
+
+    @Prop({ required: false })
+    options?: string;
 }
 
 export const ResourceFieldSchema = SchemaFactory.createForClass(ResourceField);

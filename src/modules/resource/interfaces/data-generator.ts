@@ -5,3 +5,9 @@ export const ResourceFieldTypeArr: ResourceFieldType[] = [
     'list',
     'number',
 ];
+
+export interface DataGenerator<T = any> {
+    generate(options?: string): T;
+}
+
+export type DataGeneratorProvider = Record<ResourceFieldType, DataGenerator>;
