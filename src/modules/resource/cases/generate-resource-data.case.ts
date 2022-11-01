@@ -1,6 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 
 import { Model, ObjectId } from 'mongoose';
+
+import { MAIN_CONN } from '@shared/db/config';
 
 import { GENERATORS } from '../data-generators';
 import { Resource } from '../entities/resource.entity';
@@ -9,7 +12,8 @@ import { DataGeneratorProvider } from '../interfaces/data-generator';
 @Injectable()
 export class GenerateResourceDataCase {
     constructor(
-        @Inject(Resource.name) private resourceRepository: Model<Resource>,
+        @InjectModel(Resource.name, MAIN_CONN)
+        private resourceRepository: Model<Resource>,
         @Inject(GENERATORS) private generatorsProvider: DataGeneratorProvider,
     ) {}
 

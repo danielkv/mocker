@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { Model } from 'mongoose';
 
+import { MAIN_CONN } from '@shared/db/config';
+
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { Resource } from './entities/resource.entity';
@@ -10,7 +12,7 @@ import { Resource } from './entities/resource.entity';
 @Injectable()
 export class ResourceService {
     constructor(
-        @InjectModel(Resource.name)
+        @InjectModel(Resource.name, MAIN_CONN)
         private userRepository: Model<Resource>,
     ) {}
 

@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { MAIN_CONN } from '@shared/db/config';
+
 import { GenerateResourceDataCase } from './cases/generate-resource-data.case';
 import { GENERATORS_PROVIDER } from './data-generators';
 import { Resource, ResourceSchema } from './entities/resource.entity';
@@ -9,9 +11,10 @@ import { ResourceService } from './resource.service';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([
-            { name: Resource.name, schema: ResourceSchema },
-        ]),
+        MongooseModule.forFeature(
+            [{ name: Resource.name, schema: ResourceSchema }],
+            MAIN_CONN,
+        ),
     ],
     controllers: [ResourceController],
     providers: [ResourceService, GenerateResourceDataCase, GENERATORS_PROVIDER],

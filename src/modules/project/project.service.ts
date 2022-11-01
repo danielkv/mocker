@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { FilterQuery, Model } from 'mongoose';
 
+import { MAIN_CONN } from '@shared/db/config';
+
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectFilterDto } from './dto/project-filter.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -11,7 +13,7 @@ import { Project } from './entities/project.entity';
 @Injectable()
 export class ProjectService {
     constructor(
-        @InjectModel(Project.name)
+        @InjectModel(Project.name, MAIN_CONN)
         private projectRepository: Model<Project>,
     ) {}
 

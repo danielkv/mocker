@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { Model } from 'mongoose';
 
+import { MAIN_CONN } from '@shared/db/config';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -10,7 +12,7 @@ import { User } from './entities/user.entity';
 @Injectable()
 export class UserService {
     constructor(
-        @InjectModel(User.name)
+        @InjectModel(User.name, MAIN_CONN)
         private userRepository: Model<User>,
     ) {}
 
