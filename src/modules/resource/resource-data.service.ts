@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
+import { DeleteResult } from '@shared/interfaces/responses';
+
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { ResourceData } from './interfaces/resources';
 import { ResourceService } from './resource.service';
@@ -84,7 +86,11 @@ export class ResourceDataService {
         return resourceData;
     }
 
-    async remove(projectId: string, resourcePath: string, id: string) {
+    async remove(
+        projectId: string,
+        resourcePath: string,
+        id: string,
+    ): Promise<DeleteResult> {
         const resource = await this.resourceService.findOneByProjectIdAndPath(
             projectId,
             resourcePath,

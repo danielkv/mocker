@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { MAIN_CONN } from '@shared/db/config';
+import { DeleteResult } from '@shared/interfaces/responses';
 
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
@@ -57,7 +58,7 @@ export class ResourceService {
             .exec();
     }
 
-    // remove(id: string) {
-    //     return this.userRepository.deleteOne({ _id: id });
-    // }
+    remove(id: string): Promise<DeleteResult> {
+        return this.userRepository.deleteOne({ _id: id }).exec();
+    }
 }

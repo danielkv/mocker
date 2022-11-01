@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 
 import { MAIN_CONN } from '@shared/db/config';
+import { DeleteResult } from '@shared/interfaces/responses';
 
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectFilterDto } from './dto/project-filter.dto';
@@ -21,23 +22,25 @@ export class ProjectService {
         return this.projectRepository.create(createProjectDto);
     }
 
-    findAll(filter?: ProjectFilterDto) {
+    findAll(filter?: ProjectFilterDto): Promise<Project[]> {
         const query: FilterQuery<Project> = {};
         if (filter.name) query.name = new RegExp(filter.name, 'i');
         if (filter.userId) query.userId = filter.userId;
 
-        return this.projectRepository.find(query);
+        return this.projectRepository.find(query).exec();
     }
 
-    findOne(id: string) {
-        return this.projectRepository.findById(id);
+    findOne(id: string): Promise<Project> {
+        return this.projectRepository.findById(id).exec();
     }
 
-    update(id: string, updateProjectDto: UpdateProjectDto) {
-        return this.projectRepository.updateOne({ _id: id }, updateProjectDto);
+    update(id: string, updateProjectDto: UpdateProjectDto): Promise<Project> {
+        return this.projectRepository
+            .findByIdAndUpdate(id, updateProjectDto)
+            .exec();
     }
 
-    remove(id: string) {
-        return this.projectRepository.deleteOne({ _id: id });
+    remove(id: string): Promise<DeleteResult> {
+        return this.projectRepository.deleteOne({ _id: id }).exec();
     }
 }

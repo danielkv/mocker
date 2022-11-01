@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     Param,
     Patch,
@@ -40,10 +41,10 @@ export class ResourceController {
         return this.resourceService.update(id, updateUserDto);
     }
 
-    // @Delete(':id')
-    // remove(@Param('id') id: string) {
-    //     return this.resourceService.remove(id);
-    // }
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.resourceService.remove(id);
+    }
 
     @Post('/generate/:id')
     generate(

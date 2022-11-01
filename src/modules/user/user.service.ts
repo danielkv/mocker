@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { MAIN_CONN } from '@shared/db/config';
+import { DeleteResult } from '@shared/interfaces/responses';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -20,19 +21,19 @@ export class UserService {
         return this.userRepository.create(createUserDto);
     }
 
-    findAll() {
-        return this.userRepository.find();
+    findAll(): Promise<User[]> {
+        return this.userRepository.find().exec();
     }
 
-    findOne(id: string) {
-        return this.userRepository.findById(id);
+    findOne(id: string): Promise<User> {
+        return this.userRepository.findById(id).exec();
     }
 
-    update(id: string, updateUserDto: UpdateUserDto) {
-        return this.userRepository.updateOne({ _id: id }, updateUserDto);
+    update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+        return this.userRepository.findByIdAndUpdate(id, updateUserDto).exec();
     }
 
-    remove(id: string) {
-        return this.userRepository.deleteOne({ _id: id });
+    remove(id: string): Promise<DeleteResult> {
+        return this.userRepository.deleteOne({ _id: id }).exec();
     }
 }
