@@ -1,14 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 
-import { Connection, Model } from 'mongoose';
+import { Model } from 'mongoose';
 
-import { DATA_CONN, MAIN_CONN } from '@shared/db/config';
+import { MAIN_CONN } from '@shared/db/config';
 
 import { GENERATORS } from './data-generators';
 import { Resource } from './entities/resource.entity';
 import { DataGeneratorProvider } from './interfaces/data-generator';
-import { createGenericResourceSchema } from './utils/createGenericResourceSchema';
+import { ResourceData } from './interfaces/resources';
+import { GenericResourceUtils } from './utils/genericResourceUtils';
 
 @Injectable()
 export class ResourceDataGeneratorService {
@@ -16,7 +17,7 @@ export class ResourceDataGeneratorService {
         @InjectModel(Resource.name, MAIN_CONN)
         private resourceRepository: Model<Resource>,
         @Inject(GENERATORS) private generatorsProvider: DataGeneratorProvider,
-        @InjectConnection(DATA_CONN) private dataConnection: Connection,
+        private genericResourceUtils: GenericResourceUtils,
     ) {}
 
     async execute(resourceId: string, numberOfRows: number) {
@@ -25,7 +26,7 @@ export class ResourceDataGeneratorService {
         );
 
         const data = Array.from({ length: numberOfRows }).map(() => {
-            return resource.fields.reduce<Record<string, any>>((row, field) => {
+            return resource.fields.reduce<ResourceData>((row, field) => {
                 const generator = this.generatorsProvider[field.type];
                 if (!generator)
                     throw new Error("Generator Provider doesn't exist");
@@ -38,11 +39,8 @@ export class ResourceDataGeneratorService {
             }, {});
         });
 
-        const genericSchema = createGenericResourceSchema(resource.fields);
-
-        await this.dataConnection
-            .model(resource.collectionName, genericSchema)
-            .create(data);
+        const genericModel = this.genericResourceUtils.getModel(resource);
+        await genericModel.create(data);
 
         return data;
     }

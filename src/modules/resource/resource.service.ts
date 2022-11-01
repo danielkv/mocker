@@ -32,21 +32,32 @@ export class ResourceService {
         });
     }
 
-    findAll() {
-        return this.userRepository.find();
+    findAll(): Promise<Resource[]> {
+        return this.userRepository.find().exec();
     }
 
-    findOne(id: string) {
-        return this.userRepository.findById(id);
+    findOne(id: string): Promise<Resource> {
+        return this.userRepository.findById(id).exec();
     }
 
-    update(id: string, updateUserDto: UpdateResourceDto) {
-        return this.userRepository.findByIdAndUpdate(id, updateUserDto, {
-            new: true,
-        });
+    findOneByProjectIdAndPath(
+        projectId: string,
+        resourcePath: string,
+    ): Promise<Resource> {
+        return this.userRepository
+            .findOne({ projectId, path: resourcePath })
+            .exec();
     }
 
-    remove(id: string) {
-        return this.userRepository.deleteOne({ _id: id });
+    update(id: string, updateUserDto: UpdateResourceDto): Promise<Resource> {
+        return this.userRepository
+            .findByIdAndUpdate(id, updateUserDto, {
+                new: true,
+            })
+            .exec();
     }
+
+    // remove(id: string) {
+    //     return this.userRepository.deleteOne({ _id: id });
+    // }
 }

@@ -1,3 +1,3 @@
-export type Resource = Record<string, any>;
+export type ResourceData = Record<string, any>;
 
-export type ResourceEndpointResponse = any;
+export type ResourceDataResponse = any;

@@ -6,43 +6,67 @@ import {
     Param,
     Patch,
     Post,
-    Query,
 } from '@nestjs/common';
 
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
-import { ResourceDataGeneratorService } from './resource-data-generator.service';
-import { ResourceService } from './resource.service';
+import { ResourceDataService } from './resource-data.service';
 
 @Controller('api/:projectId/:resourcePath')
 export class ResourceDataController {
-    constructor(
-        private readonly resourceService: ResourceService,
-        private readonly resourceDataGeneratorService: ResourceDataGeneratorService,
-    ) {}
+    constructor(private resourceDataService: ResourceDataService) {}
 
     @Post()
-    create(@Body() createUserDto: CreateResourceDto) {
-        return this.resourceService.create(createUserDto);
+    async create(
+        @Param('projectId') projectId: string,
+        @Param('resourcePath') resourcePath: string,
+        @Body() createUserDto: CreateResourceDto,
+    ) {
+        return this.resourceDataService.create(
+            projectId,
+            resourcePath,
+            createUserDto,
+        );
     }
 
     @Get()
-    findAll() {
-        return this.resourceService.findAll();
+    findAll(
+        @Param('projectId') projectId: string,
+        @Param('resourcePath') resourcePath: string,
+    ) {
+        return this.resourceDataService.findAll(projectId, resourcePath);
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.resourceService.findOne(id);
+    findOne(
+        @Param('projectId') projectId: string,
+        @Param('resourcePath') resourcePath: string,
+        @Param('id') id: string,
+    ) {
+        return this.resourceDataService.findOne(projectId, resourcePath, id);
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateUserDto: UpdateResourceDto) {
-        return this.resourceService.update(id, updateUserDto);
+    update(
+        @Param('projectId') projectId: string,
+        @Param('resourcePath') resourcePath: string,
+        @Param('id') id: string,
+        @Body() updateUserDto: UpdateResourceDto,
+    ) {
+        return this.resourceDataService.update(
+            projectId,
+            resourcePath,
+            id,
+            updateUserDto,
+        );
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.resourceService.remove(id);
+    remove(
+        @Param('projectId') projectId: string,
+        @Param('resourcePath') resourcePath: string,
+        @Param('id') id: string,
+    ) {
+        return this.resourceDataService.remove(projectId, resourcePath, id);
     }
 }
