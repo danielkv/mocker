@@ -7,9 +7,9 @@ import { BaseGenerator } from './base.generator';
 @Injectable()
 export class StringGenerator
     extends BaseGenerator
-    implements DataGenerator<string>
+    implements DataGenerator<never, string>
 {
-    generate(options?: string): string {
+    generate(): string {
         return faker.lorem.word();
     }
 }

@@ -1,8 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
+import { Schema as SchemaTypes } from 'mongoose';
+
 import { BaseSchema } from '@shared/db/BaseSchema';
 
-import { ResourceField, ResourceFieldSchema } from './field.entity';
+import { ResourceField } from '../interfaces/resource-field';
 
 export type ResourceDocument = Resource & Document;
 
@@ -17,7 +19,7 @@ export class Resource extends BaseSchema {
     @Prop({ required: true })
     path: string;
 
-    @Prop({ type: [ResourceFieldSchema], required: true })
+    @Prop({ type: [SchemaTypes.Types.Mixed], required: true })
     fields: ResourceField[];
 
     @Prop({ required: true })

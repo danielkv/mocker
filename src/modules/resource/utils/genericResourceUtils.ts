@@ -5,9 +5,9 @@ import { Connection, Model, Schema } from 'mongoose';
 
 import { DATA_CONN } from '@shared/db/config';
 
-import { ResourceField } from '../entities/field.entity';
 import { Resource } from '../entities/resource.entity';
 import { GenericResourceSchema } from '../interfaces/data-generator';
+import { ResourceField } from '../interfaces/resource-field';
 import { ResourceData } from '../interfaces/resources';
 
 @Injectable()
@@ -17,6 +17,10 @@ export class GenericResourceUtils {
     ) {}
 
     getModel(resource: Resource): Model<ResourceData> {
+        const { collectionName } = resource;
+        const cachedModel = this.dataConnection.models?.[collectionName];
+        if (cachedModel) return cachedModel;
+
         const genericSchema = this.createGenericSchema(resource.fields);
 
         return this.dataConnection.model(

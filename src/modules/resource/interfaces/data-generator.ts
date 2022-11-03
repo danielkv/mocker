@@ -9,8 +9,8 @@ export const ResourceFieldTypeArr: ResourceFieldType[] = [
     'boolean',
 ];
 
-export interface DataGenerator<T = any> {
-    generate(options?: string): T;
+export interface DataGenerator<Options = any, Response = any> {
+    generate(options: Options): Response;
 }
 
 export type DataGeneratorProvider = Record<ResourceFieldType, DataGenerator>;

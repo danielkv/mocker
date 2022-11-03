@@ -14,7 +14,5 @@ export class CreateResourceFieldDto {
     @IsEnum(ResourceFieldTypeArr)
     type: ResourceFieldType;
 
-    @IsString()
-    @IsOptional()
     options?: string;
 }
