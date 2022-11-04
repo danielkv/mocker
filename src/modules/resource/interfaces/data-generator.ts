@@ -1,11 +1,12 @@
-import { SchemaDefinitionProperty, SchemaType } from 'mongoose';
+import { SchemaDefinitionProperty } from 'mongoose';
 
-export type ResourceFieldType = 'string' | 'list' | 'number';
+export type ResourceFieldType = 'string' | 'oneof' | 'number' | 'boolean';
 
 export const ResourceFieldTypeArr: ResourceFieldType[] = [
     'string',
-    'list',
+    'oneof',
     'number',
+    'boolean',
 ];
 
 export interface DataGenerator<T = any> {
