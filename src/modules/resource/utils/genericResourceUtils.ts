@@ -6,7 +6,7 @@ import { Connection, Model, Schema, SchemaDefinition } from 'mongoose';
 import { DATA_CONN, MAIN_CONN } from '@shared/db/config';
 
 import { Resource } from '../entities/resource.entity';
-import { ResourceField } from '../interfaces/resource-field';
+import { RelationField, ResourceField } from '../interfaces/resource-field';
 import { ResourceData } from '../interfaces/resources';
 
 @Injectable()
@@ -64,8 +64,10 @@ export class GenericResourceUtils {
         return new Schema(schemaFields, { versionKey: false });
     }
 
-    filterRelationFields(fields: ResourceField[]): ResourceField[] {
-        return fields.filter((field) => field.type === 'relation');
+    filterRelationFields(fields: ResourceField[]): RelationField[] {
+        return fields.filter(
+            (field): field is RelationField => field.type === 'relation',
+        );
     }
 
     filterNonRelationFields(fields: ResourceField[]): ResourceField[] {

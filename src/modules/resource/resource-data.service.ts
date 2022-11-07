@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 import { DeleteResult } from '@shared/interfaces/responses';
 
-import { UpdateResourceDto } from './dto/update-resource.dto';
 import { ResourceData } from './interfaces/resources';
 import { ResourceService } from './resource.service';
 import { GenericResourceUtils } from './utils/genericResourceUtils';
@@ -74,19 +73,20 @@ export class ResourceDataService {
         projectId: string,
         resourcePath: string,
         id: string,
-        updateUserDto: UpdateResourceDto,
+        data: ResourceData,
     ): Promise<ResourceData> {
         const resource = await this.resourceService.findOneByProjectIdAndPath(
             projectId,
             resourcePath,
         );
 
-        const genericModel = await this.genericResourceUtils.getModel(
-            resource._id,
-        );
+        const model = await this.genericResourceUtils.getModel(resource._id);
 
-        const resourceData = genericModel
-            .findByIdAndUpdate(id, updateUserDto, {
+        console.log(data);
+        console.log(model.schema);
+
+        const resourceData = model
+            .findByIdAndUpdate(id, data, {
                 new: true,
             })
             .exec();

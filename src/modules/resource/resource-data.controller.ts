@@ -10,6 +10,7 @@ import {
 
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
+import { ResourceData } from './interfaces/resources';
 import { ResourceDataService } from './resource-data.service';
 
 @Controller('api/:projectId/:resourcePath')
@@ -51,13 +52,13 @@ export class ResourceDataController {
         @Param('projectId') projectId: string,
         @Param('resourcePath') resourcePath: string,
         @Param('id') id: string,
-        @Body() updateUserDto: UpdateResourceDto,
+        @Body() data: ResourceData,
     ) {
         return this.resourceDataService.update(
             projectId,
             resourcePath,
             id,
-            updateUserDto,
+            data,
         );
     }
 

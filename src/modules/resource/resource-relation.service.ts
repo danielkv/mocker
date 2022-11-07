@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 
 import { MAIN_CONN } from '@shared/db/config';
 import { DeleteResult } from '@shared/interfaces/responses';
@@ -17,65 +17,32 @@ import { RelationField, ResourceField } from './interfaces/resource-field';
 import { GenericResourceUtils } from './utils/genericResourceUtils';
 
 @Injectable()
-export class ResourceService {
+export class ResourceRelationService {
     constructor(
         @InjectModel(Resource.name, MAIN_CONN)
         private resourceRepository: Model<Resource>,
         private genericResourceUtils: GenericResourceUtils,
     ) {}
 
-    private createResourceCollectionName(
-        createResourceDto: CreateResourceDto,
-    ): string {
-        return `${createResourceDto.projectId}-${createResourceDto.path}`;
-    }
-
-    create(createResourceDto: CreateResourceDto): Promise<Resource> {
-        const collectionName =
-            this.createResourceCollectionName(createResourceDto);
-
-        return this.resourceRepository.create({
-            ...createResourceDto,
-            collectionName,
-        });
-    }
-
-    findAll(): Promise<Resource[]> {
-        return this.resourceRepository.find().exec();
-    }
-
-    findOne(id: string): Promise<Resource> {
-        return this.resourceRepository.findById(id).exec();
-    }
-
-    findOneByProjectIdAndPath(
-        projectId: string,
-        resourcePath: string,
+    addThirdParty(
+        currentResource: Resource,
+        currentField: RelationField,
     ): Promise<Resource> {
+        const thirdPartyField = this.buildThidPartyRelationField(
+            currentResource,
+            currentField,
+        );
+
         return this.resourceRepository
-            .findOne({ projectId, path: resourcePath })
-            .exec();
-    }
-
-    async update(
-        id: string,
-        updateUserDto: UpdateResourceDto,
-    ): Promise<Resource> {
-        const updatedResource = await this.resourceRepository
-            .findByIdAndUpdate(id, updateUserDto, {
-                new: true,
+            .findByIdAndUpdate(currentField.options.resourceId, {
+                $push: { fields: thirdPartyField },
             })
             .exec();
-
-        await this.updateRelations(updatedResource);
-
-        return updatedResource;
     }
 
-    private async updateRelations({
-        _id: currentResourceId,
-        fields,
-    }: Resource): Promise<void> {
+    private async updateRelations(currentResource: Resource): Promise<void> {
+        const { _id: currentResourceId, fields } = currentResource;
+
         const relationFields =
             this.genericResourceUtils.filterRelationFields(fields);
 
@@ -113,26 +80,7 @@ export class ResourceService {
         if (fieldsToAdd.length) {
             await Promise.all(
                 fieldsToAdd.map((field) => {
-                    const relationThirdPartyOptions: ReleationGeneratorOptions =
-                        {
-                            type:
-                                field.options.type === 'many-to-one'
-                                    ? 'one-to-many'
-                                    : 'many-to-one',
-                            resourceId: currentResourceId,
-                            relationFieldName: field.name,
-                        };
-
-                    const relationThirdPartyField: RelationField = {
-                        name: field.options.relationFieldName,
-                        type: 'relation',
-                        options: relationThirdPartyOptions,
-                    };
-
-                    return this.resourceRepository.findByIdAndUpdate(
-                        field.options.resourceId,
-                        { $push: { fields: relationThirdPartyField } },
-                    );
+                    return this.addThirdParty(currentResource, field);
                 }),
             );
         }
@@ -151,10 +99,45 @@ export class ResourceService {
 
         if (relations.length) {
             // remove relation from third party resource
+
+			await Promise.all(
+                fieldsToAdd.map((field) => {
+                    return this.removeThirdParty(currentResource._id, {});
+                }),
+            );
         }
     }
 
-    remove(id: string): Promise<DeleteResult> {
-        return this.resourceRepository.deleteOne({ _id: id }).exec();
+    removeThirdParty(
+        currentResourceId: string,
+        findField: FilterQuery<RelationField>,
+    ): Promise<Resource> {
+        return this.resourceRepository
+            .findByIdAndUpdate(currentResourceId, {
+                $push: { fields: findField },
+            })
+            .exec();
+    }
+
+    private buildThidPartyRelationField(
+        currentResource: Resource,
+        currentField: RelationField,
+    ): RelationField {
+        const { _id: currentResourceId } = currentResource;
+
+        const relationThirdPartyOptions: ReleationGeneratorOptions = {
+            type:
+                currentField.options.type === 'many-to-one'
+                    ? 'one-to-many'
+                    : 'many-to-one',
+            resourceId: currentResourceId,
+            relationFieldName: currentField.name,
+        };
+
+        return {
+            name: currentField.options.relationFieldName,
+            type: 'relation',
+            options: relationThirdPartyOptions,
+        };
     }
 }
