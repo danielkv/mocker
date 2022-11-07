@@ -39,7 +39,9 @@ export class ResourceDataGeneratorService {
             }, {});
         });
 
-        const genericModel = this.genericResourceUtils.getModel(resource);
+        const genericModel = await this.genericResourceUtils.getModel(
+            resourceId,
+        );
         await genericModel.create(data);
 
         return data;

@@ -1,6 +1,7 @@
 import {
     NumberGeneratorOptions,
     OneOfGeneratorOptions,
+    ReleationGeneratorOptions,
 } from './generator-options';
 
 interface BaseField {
@@ -23,9 +24,14 @@ export interface BooleanField extends BaseField {
     type: 'boolean';
     options: never;
 }
+export interface RelationField extends BaseField {
+    type: 'relation';
+    options: ReleationGeneratorOptions;
+}
 
 export type ResourceField =
     | StringField
     | NumberField
     | OneOfField
-    | BooleanField;
+    | BooleanField
+    | RelationField;

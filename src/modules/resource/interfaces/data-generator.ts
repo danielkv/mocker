@@ -1,12 +1,16 @@
-import { SchemaDefinitionProperty } from 'mongoose';
-
-export type ResourceFieldType = 'string' | 'oneof' | 'number' | 'boolean';
+export type ResourceFieldType =
+    | 'string'
+    | 'oneof'
+    | 'number'
+    | 'boolean'
+    | 'relation';
 
 export const ResourceFieldTypeArr: ResourceFieldType[] = [
     'string',
     'oneof',
     'number',
     'boolean',
+    'relation',
 ];
 
 export interface DataGenerator<Options = any, Response = any> {
@@ -14,8 +18,6 @@ export interface DataGenerator<Options = any, Response = any> {
 }
 
 export type DataGeneratorProvider = Record<ResourceFieldType, DataGenerator>;
-
-export type GenericResourceSchema = Record<string, SchemaDefinitionProperty>;
 
 export type GeneratorOptionSingleType = boolean | string | number;
 

@@ -11,6 +11,7 @@ const generators: DataGeneratorProvider = {
     oneof: new OneOfGenerator(),
     number: new NumberGenerator(),
     boolean: new BooleanGenerator(),
+    relation: new BooleanGenerator(),
 };
 
 export const GENERATORS = 'GENERATORS_PROVIDER';

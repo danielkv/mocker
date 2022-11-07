@@ -24,7 +24,9 @@ export class ResourceDataService {
             resourcePath,
         );
 
-        const genericModel = this.genericResourceUtils.getModel(resource);
+        const genericModel = await this.genericResourceUtils.getModel(
+            resource._id,
+        );
 
         const resourceData = await genericModel.create(createResourceDto);
 
@@ -40,7 +42,9 @@ export class ResourceDataService {
             resourcePath,
         );
 
-        const genericModel = this.genericResourceUtils.getModel(resource);
+        const genericModel = await this.genericResourceUtils.getModel(
+            resource._id,
+        );
 
         const resourceData = await genericModel.find().exec();
 
@@ -57,7 +61,9 @@ export class ResourceDataService {
             resourcePath,
         );
 
-        const genericModel = this.genericResourceUtils.getModel(resource);
+        const genericModel = await this.genericResourceUtils.getModel(
+            resource._id,
+        );
 
         const resourceData = await genericModel.findById(resourceDataId).exec();
 
@@ -75,7 +81,9 @@ export class ResourceDataService {
             resourcePath,
         );
 
-        const genericModel = this.genericResourceUtils.getModel(resource);
+        const genericModel = await this.genericResourceUtils.getModel(
+            resource._id,
+        );
 
         const resourceData = genericModel
             .findByIdAndUpdate(id, updateUserDto, {
@@ -96,7 +104,9 @@ export class ResourceDataService {
             resourcePath,
         );
 
-        const genericModel = this.genericResourceUtils.getModel(resource);
+        const genericModel = await this.genericResourceUtils.getModel(
+            resource._id,
+        );
 
         const result = await genericModel.deleteOne({ _id: id });
 
