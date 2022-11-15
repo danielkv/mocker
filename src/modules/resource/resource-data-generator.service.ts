@@ -9,7 +9,7 @@ import { GENERATORS } from './data-generators';
 import { Resource } from './entities/resource.entity';
 import { DataGeneratorProvider } from './interfaces/data-generator';
 import { ResourceData } from './interfaces/resources';
-import { GenericResourceUtils } from './utils/genericResourceUtils';
+import { ResourceDataModelService } from './resource-data-model.service';
 
 @Injectable()
 export class ResourceDataGeneratorService {
@@ -17,7 +17,7 @@ export class ResourceDataGeneratorService {
         @InjectModel(Resource.name, MAIN_CONN)
         private resourceRepository: Model<Resource>,
         @Inject(GENERATORS) private generatorsProvider: DataGeneratorProvider,
-        private genericResourceUtils: GenericResourceUtils,
+        private resourceDataModelService: ResourceDataModelService,
     ) {}
 
     async execute(resourceId: string, numberOfRows: number) {
@@ -39,7 +39,7 @@ export class ResourceDataGeneratorService {
             }, {});
         });
 
-        const genericModel = await this.genericResourceUtils.getModel(
+        const genericModel = await this.resourceDataModelService.getModel(
             resourceId,
         );
         await genericModel.create(data);

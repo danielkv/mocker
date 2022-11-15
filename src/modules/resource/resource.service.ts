@@ -9,19 +9,16 @@ import { DeleteResult } from '@shared/interfaces/responses';
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { Resource } from './entities/resource.entity';
-import {
-    RelationTypeOption,
-    ReleationGeneratorOptions,
-} from './interfaces/generator-options';
-import { RelationField, ResourceField } from './interfaces/resource-field';
-import { GenericResourceUtils } from './utils/genericResourceUtils';
+import { ResourceField } from './interfaces/resource-field';
+import { ResourceUtils } from './utils/genericResourceUtils';
 
 @Injectable()
 export class ResourceService {
     constructor(
         @InjectModel(Resource.name, MAIN_CONN)
         private resourceRepository: Model<Resource>,
-        private genericResourceUtils: GenericResourceUtils,
+
+        private genericResourceUtils: ResourceUtils,
     ) {}
 
     private createResourceCollectionName(
@@ -67,91 +64,7 @@ export class ResourceService {
             })
             .exec();
 
-        await this.updateRelations(updatedResource);
-
         return updatedResource;
-    }
-
-    private async updateRelations({
-        _id: currentResourceId,
-        fields,
-    }: Resource): Promise<void> {
-        const relationFields =
-            this.genericResourceUtils.filterRelationFields(fields);
-
-        const thirdPartyResources: Resource[] = await this.resourceRepository
-            .find({
-                'fields.type': 'relation',
-                'fields.options.resourceId': currentResourceId,
-                'fields.name': {
-                    $in: relationFields.map(
-                        (field) => field.options.relationFieldName,
-                    ),
-                },
-            })
-            .exec();
-
-        const fieldsToAdd = relationFields.filter((field) => {
-            return thirdPartyResources.some((resource) => {
-                const thirdPartyRelationFields =
-                    this.genericResourceUtils.filterRelationFields(
-                        resource.fields,
-                    );
-
-                return !(
-                    resource._id === field.options.resourceId &&
-                    thirdPartyRelationFields.find(
-                        (relationField) =>
-                            relationField.options.relationFieldName ===
-                            field.name,
-                    )
-                );
-            });
-        });
-
-        // add relation to the third party resource
-        if (fieldsToAdd.length) {
-            await Promise.all(
-                fieldsToAdd.map((field) => {
-                    const relationThirdPartyOptions: ReleationGeneratorOptions =
-                        {
-                            type:
-                                field.options.type === 'many-to-one'
-                                    ? 'one-to-many'
-                                    : 'many-to-one',
-                            resourceId: currentResourceId,
-                            relationFieldName: field.name,
-                        };
-
-                    const relationThirdPartyField: RelationField = {
-                        name: field.options.relationFieldName,
-                        type: 'relation',
-                        options: relationThirdPartyOptions,
-                    };
-
-                    return this.resourceRepository.findByIdAndUpdate(
-                        field.options.resourceId,
-                        { $push: { fields: relationThirdPartyField } },
-                    );
-                }),
-            );
-        }
-
-        const relations: Resource[] = await this.resourceRepository
-            .find({
-                'fields.type': 'relation',
-                'fields.options.resourceId': currentResourceId,
-                'fields.name': {
-                    $nin: relationFields.map(
-                        (field) => field.options.relationFieldName,
-                    ),
-                },
-            })
-            .exec();
-
-        if (relations.length) {
-            // remove relation from third party resource
-        }
     }
 
     remove(id: string): Promise<DeleteResult> {

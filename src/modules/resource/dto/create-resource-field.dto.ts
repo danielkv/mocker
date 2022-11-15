@@ -4,6 +4,7 @@ import {
     ResourceFieldType,
     ResourceFieldTypeArr,
 } from '../interfaces/data-generator';
+import { FieldOptions } from '../interfaces/generator-options';
 
 export class CreateResourceFieldDto {
     @IsString()
@@ -14,5 +15,5 @@ export class CreateResourceFieldDto {
     @IsEnum(ResourceFieldTypeArr)
     type: ResourceFieldType;
 
-    options?: string;
+    options?: FieldOptions;
 }

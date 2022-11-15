@@ -3,14 +3,16 @@ import { Injectable } from '@nestjs/common';
 import { DeleteResult } from '@shared/interfaces/responses';
 
 import { ResourceData } from './interfaces/resources';
+import { ResourceDataModelService } from './resource-data-model.service';
 import { ResourceService } from './resource.service';
-import { GenericResourceUtils } from './utils/genericResourceUtils';
+import { ResourceUtils } from './utils/genericResourceUtils';
 
 @Injectable()
 export class ResourceDataService {
     constructor(
         private readonly resourceService: ResourceService,
-        private genericResourceUtils: GenericResourceUtils,
+        private resourceDataModelService: ResourceDataModelService,
+        private resourceUtils: ResourceUtils,
     ) {}
 
     async create(
@@ -23,7 +25,7 @@ export class ResourceDataService {
             resourcePath,
         );
 
-        const genericModel = await this.genericResourceUtils.getModel(
+        const genericModel = await this.resourceDataModelService.getModel(
             resource._id,
         );
 
@@ -41,7 +43,7 @@ export class ResourceDataService {
             resourcePath,
         );
 
-        const genericModel = await this.genericResourceUtils.getModel(
+        const genericModel = await this.resourceDataModelService.getModel(
             resource._id,
         );
 
@@ -60,11 +62,20 @@ export class ResourceDataService {
             resourcePath,
         );
 
-        const genericModel = await this.genericResourceUtils.getModel(
+        const genericModel = await this.resourceDataModelService.getModel(
             resource._id,
         );
 
-        const resourceData = await genericModel.findById(resourceDataId).exec();
+        const resourceQuery = genericModel.findById(resourceDataId);
+
+        const relationFields = this.resourceUtils.filterRelationFields(
+            resource.fields,
+        );
+        relationFields.forEach((field) => {
+            if (field.options.populate) resourceQuery.populate(field.name);
+        });
+
+        const resourceData = await resourceQuery;
 
         return resourceData;
     }
@@ -80,10 +91,9 @@ export class ResourceDataService {
             resourcePath,
         );
 
-        const model = await this.genericResourceUtils.getModel(resource._id);
-
-        console.log(data);
-        console.log(model.schema);
+        const model = await this.resourceDataModelService.getModel(
+            resource._id,
+        );
 
         const resourceData = model
             .findByIdAndUpdate(id, data, {
@@ -104,7 +114,7 @@ export class ResourceDataService {
             resourcePath,
         );
 
-        const genericModel = await this.genericResourceUtils.getModel(
+        const genericModel = await this.resourceDataModelService.getModel(
             resource._id,
         );
 

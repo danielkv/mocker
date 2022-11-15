@@ -6,11 +6,12 @@ import { MAIN_CONN } from '@shared/db/config';
 import { GENERATORS_PROVIDER } from './data-generators';
 import { Resource, ResourceSchema } from './entities/resource.entity';
 import { ResourceDataGeneratorService } from './resource-data-generator.service';
+import { ResourceDataModelService } from './resource-data-model.service';
 import { ResourceDataController } from './resource-data.controller';
 import { ResourceDataService } from './resource-data.service';
 import { ResourceController } from './resource.controller';
 import { ResourceService } from './resource.service';
-import { GenericResourceUtils } from './utils/genericResourceUtils';
+import { ResourceUtils } from './utils/genericResourceUtils';
 
 @Module({
     imports: [
@@ -23,8 +24,9 @@ import { GenericResourceUtils } from './utils/genericResourceUtils';
     providers: [
         ResourceService,
         ResourceDataGeneratorService,
-        GenericResourceUtils,
+        ResourceUtils,
         ResourceDataService,
+        ResourceDataModelService,
         GENERATORS_PROVIDER,
     ],
 })

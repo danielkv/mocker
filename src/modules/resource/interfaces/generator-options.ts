@@ -11,7 +11,11 @@ export type RelationTypeOption = 'many-to-one' | 'one-to-many';
 export interface ReleationGeneratorOptions {
     type: RelationTypeOption;
     resourceId: string;
-    relationFieldName: string;
+    collectionName: string;
+    populate: boolean;
 }
 
-export type FieldOptions = NumberGeneratorOptions | OneOfGeneratorOptions;
+export type FieldOptions =
+    | NumberGeneratorOptions
+    | OneOfGeneratorOptions
+    | ReleationGeneratorOptions;
