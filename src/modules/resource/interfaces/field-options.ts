@@ -1,14 +1,14 @@
-export interface NumberGeneratorOptions {
+export interface NumberDataTypeOptions {
     min: number;
     max: number;
 }
 
-export interface OneOfGeneratorOptions {
+export interface OneOfDataTypeOptions {
     values: string[];
 }
 
 export type RelationTypeOption = 'many-to-one' | 'one-to-many';
-export interface ReleationGeneratorOptions {
+export interface ReleationDataTypeOptions {
     type: RelationTypeOption;
     resourceId: string;
     collectionName: string;
@@ -16,6 +16,6 @@ export interface ReleationGeneratorOptions {
 }
 
 export type FieldOptions =
-    | NumberGeneratorOptions
-    | OneOfGeneratorOptions
-    | ReleationGeneratorOptions;
+    | NumberDataTypeOptions
+    | OneOfDataTypeOptions
+    | ReleationDataTypeOptions;

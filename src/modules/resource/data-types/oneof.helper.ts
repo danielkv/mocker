@@ -1,17 +1,17 @@
 import { faker } from '@faker-js/faker';
 import { Injectable } from '@nestjs/common';
 
-import { GeneratorException } from '../exceptions/generator-exception';
-import { DataGenerator } from '../interfaces/data-generator';
-import { BaseGenerator } from './base.generator';
+import { DataGeneratorException } from '../exceptions/generator-exception';
+import { ResourceDataTypeHelper } from '../interfaces/data-type-helper';
+import { ResourceDataBaseHelper } from './base.helper';
 
 @Injectable()
-export class OneOfGenerator
-    extends BaseGenerator
-    implements DataGenerator<string>
+export class OneOfDataTypeHelper
+    extends ResourceDataBaseHelper
+    implements ResourceDataTypeHelper<string>
 {
     generate(options?: string): string {
-        if (!options) throw new GeneratorException('No elements to select');
+        if (!options) throw new DataGeneratorException('No elements to select');
 
         const arr = this.translateArray(options);
 

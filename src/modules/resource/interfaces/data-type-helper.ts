@@ -13,11 +13,14 @@ export const ResourceFieldTypeArr: ResourceFieldType[] = [
     'relation',
 ];
 
-export interface DataGenerator<Options = any, Response = any> {
+export interface ResourceDataTypeHelper<Options = any, Response = any> {
     generate(options: Options): Response;
 }
 
-export type DataGeneratorProvider = Record<ResourceFieldType, DataGenerator>;
+export type DataTypeHelperProviders = Record<
+    ResourceFieldType,
+    ResourceDataTypeHelper
+>;
 
 export type GeneratorOptionSingleType = boolean | string | number;
 

@@ -5,9 +5,9 @@ import { Model } from 'mongoose';
 
 import { MAIN_CONN } from '@shared/db/config';
 
-import { GENERATORS } from './data-generators';
+import { DATA_TYPE_HELPERS } from './data-types';
 import { Resource } from './entities/resource.entity';
-import { DataGeneratorProvider } from './interfaces/data-generator';
+import { DataTypeHelperProviders } from './interfaces/data-type-helper';
 import { ResourceData } from './interfaces/resources';
 import { ResourceDataModelService } from './resource-data-model.service';
 
@@ -16,7 +16,8 @@ export class ResourceDataGeneratorService {
     constructor(
         @InjectModel(Resource.name, MAIN_CONN)
         private resourceRepository: Model<Resource>,
-        @Inject(GENERATORS) private generatorsProvider: DataGeneratorProvider,
+        @Inject(DATA_TYPE_HELPERS)
+        private generatorsProvider: DataTypeHelperProviders,
         private resourceDataModelService: ResourceDataModelService,
     ) {}
 
