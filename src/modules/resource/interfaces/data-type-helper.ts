@@ -1,7 +1,7 @@
 import { DataType } from '../interfaces/data-type';
 
 export interface ResourceDataTypeHelper<
-    Field extends DataType.ResourceField = DataType.ResourceField,
+    Field extends DataType.Field = DataType.Field,
     Value = any,
 > {
     /**

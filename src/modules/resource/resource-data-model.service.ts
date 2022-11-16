@@ -54,7 +54,7 @@ export class ResourceDataModelService {
         return Promise.all(promises);
     }
 
-    buildSchema(fields: DataType.ResourceField[]): Schema<ResourceData> {
+    buildSchema(fields: DataType.Field[]): Schema<ResourceData> {
         const schemaFields: SchemaDefinition = {};
 
         for (let i = 0; i < fields.length; i++) {

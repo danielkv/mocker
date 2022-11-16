@@ -20,7 +20,7 @@ export class Resource extends BaseSchema {
     path: string;
 
     @Prop({ type: [SchemaTypes.Types.Mixed], required: true })
-    fields: DataType.ResourceField[];
+    fields: DataType.Field[];
 
     @Prop({ required: true })
     projectId: string;

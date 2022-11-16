@@ -10,10 +10,6 @@ export class StringDataTypeHelper
     extends ResourceDataBaseHelper
     implements ResourceDataTypeHelper<DataType.StringField, string>
 {
-    validate(value: string, field: DataType.StringField): boolean {
-        throw new Error('Method not implemented.');
-    }
-
     generate(): string {
         return faker.lorem.word();
     }

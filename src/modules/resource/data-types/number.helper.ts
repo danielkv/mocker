@@ -10,10 +10,6 @@ export class NumberDataTypeHelper
     extends ResourceDataBaseHelper
     implements ResourceDataTypeHelper<DataType.NumberField, number>
 {
-    validate(value: number, field: DataType.NumberField): boolean {
-        throw new Error('Method not implemented.');
-    }
-
     generate({ options: { min, max } }: DataType.NumberField): number {
         return faker.datatype.number({ max, min });
     }

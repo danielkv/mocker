@@ -8,7 +8,7 @@ export class CreateResourceFieldDto {
     name: string;
 
     @IsNotEmpty()
-    //@IsEnum(DataType.FieldTypeArr)
+    @IsEnum(DataType.FieldTypeArr)
     type: DataType.FieldType;
 
     options?: DataType.FieldOptions;

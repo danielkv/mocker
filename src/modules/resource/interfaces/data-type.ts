@@ -18,6 +18,7 @@ export namespace DataType {
 
     interface FieldDataTypeBase {
         required: boolean;
+        allowEmpty: boolean;
     }
 
     interface StringDataTypeOptions extends FieldDataTypeBase {}
@@ -33,6 +34,11 @@ export namespace DataType {
     }
 
     type RelationTypeOption = 'many-to-one' | 'one-to-many';
+
+    export type RelationSingleValue = { _id: string };
+    export type RelationListValue = { _id: string }[];
+    export type RelationValue = RelationSingleValue | RelationListValue;
+
     interface ReleationDataTypeOptions extends FieldDataTypeBase {
         type: RelationTypeOption;
         resourceId: string;
@@ -51,11 +57,12 @@ export namespace DataType {
 
     interface BaseField {
         name: string;
+        type: FieldType;
     }
 
     export interface StringField extends BaseField {
         type: 'string';
-        options: never;
+        options: StringDataTypeOptions;
     }
     export interface NumberField extends BaseField {
         type: 'number';
@@ -74,7 +81,7 @@ export namespace DataType {
         options: ReleationDataTypeOptions;
     }
 
-    export type ResourceField =
+    export type Field =
         | StringField
         | NumberField
         | OneOfField
