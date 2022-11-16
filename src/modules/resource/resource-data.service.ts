@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 
 import { DeleteResult } from '@shared/interfaces/responses';
 
 import { ResourceData } from './interfaces/resources';
+import { ResourceDataHelperService } from './resource-data-helper.service';
 import { ResourceDataModelService } from './resource-data-model.service';
 import { ResourceService } from './resource.service';
 import { ResourceUtils } from './utils/genericResourceUtils';
@@ -13,6 +14,7 @@ export class ResourceDataService {
         private readonly resourceService: ResourceService,
         private resourceDataModelService: ResourceDataModelService,
         private resourceUtils: ResourceUtils,
+        private resourceDataHelperService: ResourceDataHelperService,
     ) {}
 
     async create(
@@ -90,6 +92,9 @@ export class ResourceDataService {
             projectId,
             resourcePath,
         );
+
+        // validation
+        this.resourceDataHelperService.validate(resource, data, true);
 
         const model = await this.resourceDataModelService.getModel(
             resource._id,

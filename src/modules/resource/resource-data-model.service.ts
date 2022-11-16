@@ -55,34 +55,35 @@ export class ResourceDataModelService {
     }
 
     buildSchema(fields: DataType.Field[]): Schema<ResourceData> {
-        const schemaFields: SchemaDefinition = {};
+        const schemaFields = fields.reduce<SchemaDefinition>(
+            (accSchemaFields, field) => {
+                switch (field.type) {
+                    case 'relation': {
+                        const relationRef = field.options.collectionName;
 
-        for (let i = 0; i < fields.length; i++) {
-            const field = fields[i];
-
-            switch (field.type) {
-                case 'relation': {
-                    const relationRef = field.options.collectionName;
-
-                    if (field.options.type === 'many-to-one') {
-                        schemaFields[field.name] = {
-                            type: Schema.Types.ObjectId,
-                            ref: relationRef,
-                        };
-                    } else {
-                        schemaFields[field.name] = [
-                            {
+                        if (field.options.type === 'many-to-one') {
+                            accSchemaFields[field.name] = {
                                 type: Schema.Types.ObjectId,
                                 ref: relationRef,
-                            },
-                        ];
+                            };
+                        } else {
+                            accSchemaFields[field.name] = [
+                                {
+                                    type: Schema.Types.ObjectId,
+                                    ref: relationRef,
+                                },
+                            ];
+                        }
+                        break;
                     }
-                    break;
+                    default:
+                        accSchemaFields[field.name] = Schema.Types.Mixed;
                 }
-                default:
-                    schemaFields[field.name] = Schema.Types.Mixed;
-            }
-        }
+
+                return accSchemaFields;
+            },
+            {},
+        );
 
         return new Schema(schemaFields, { versionKey: false });
     }

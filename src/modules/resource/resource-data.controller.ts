@@ -6,13 +6,14 @@ import {
     Param,
     Patch,
     Post,
+    UseFilters,
 } from '@nestjs/common';
 
-import { CreateResourceDto } from './dto/create-resource.dto';
-import { UpdateResourceDto } from './dto/update-resource.dto';
+import { DataValidationExceptionFilter } from './exceptions/data-validation-exception-filter';
 import { ResourceData } from './interfaces/resources';
 import { ResourceDataService } from './resource-data.service';
 
+@UseFilters(DataValidationExceptionFilter)
 @Controller('api/:projectId/:resourcePath')
 export class ResourceDataController {
     constructor(private resourceDataService: ResourceDataService) {}
@@ -21,7 +22,7 @@ export class ResourceDataController {
     async create(
         @Param('projectId') projectId: string,
         @Param('resourcePath') resourcePath: string,
-        @Body() createUserDto: CreateResourceDto,
+        @Body() createUserDto: ResourceData,
     ) {
         return this.resourceDataService.create(
             projectId,

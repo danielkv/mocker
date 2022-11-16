@@ -6,13 +6,13 @@ export interface ResourceDataTypeHelper<
 > {
     /**
      * Checks if the value meets the requirements of the data type.
-     * Throws a DataValidationException in case is not valid
+     * Throws a FieldValidationException in case is not valid
      * Returns true in case of valid
      *
      * @param value Value of the field
      * @param options Field options
      */
-    validate(value: Value, field: Field): boolean;
+    validate(value: Value, field: Field, update: boolean): boolean;
 
     /**
      * Generate the random data from options and field type

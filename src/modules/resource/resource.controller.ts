@@ -11,14 +11,14 @@ import {
 
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
-import { ResourceDataGeneratorService } from './resource-data-generator.service';
+import { ResourceDataHelperService } from './resource-data-helper.service';
 import { ResourceService } from './resource.service';
 
 @Controller('resource')
 export class ResourceController {
     constructor(
         private readonly resourceService: ResourceService,
-        private readonly resourceDataGeneratorService: ResourceDataGeneratorService,
+        private readonly resourceDataGeneratorService: ResourceDataHelperService,
     ) {}
 
     @Post()
@@ -51,6 +51,6 @@ export class ResourceController {
         @Param('id') id: string,
         @Query('numberOfRows') numberOfRows: number,
     ) {
-        return this.resourceDataGeneratorService.execute(id, numberOfRows);
+        return this.resourceDataGeneratorService.generate(id, numberOfRows);
     }
 }

@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Injectable } from '@nestjs/common';
 
-import { DataValidationException } from '../exceptions/data-validation-exception';
+import { FieldValidationException } from '../exceptions/field-validation-exception';
 import { DataGeneratorException } from '../exceptions/generator-exception';
 import { DataType } from '../interfaces/data-type';
 import { ResourceDataTypeHelper } from '../interfaces/data-type-helper';
@@ -12,11 +12,16 @@ export class OneOfDataTypeHelper
     extends ResourceDataBaseHelper
     implements ResourceDataTypeHelper<DataType.OneOfField, string>
 {
-    validate(value: string, field: DataType.OneOfField): boolean {
-        super.validate(value, field);
+    validate(
+        value: string,
+        field: DataType.OneOfField,
+        update: boolean,
+    ): boolean {
+        super.validate(value, field, update);
+        if (update && typeof value === 'undefined') return true;
 
         if (typeof value !== 'string' || !field.options.values.includes(value))
-            throw new DataValidationException(
+            throw new FieldValidationException(
                 `Field ${
                     field.name
                 } expect one of these values: ${field.options.values.join(

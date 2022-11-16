@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { DataValidationException } from '../exceptions/data-validation-exception';
+import { FieldValidationException } from '../exceptions/field-validation-exception';
 import { DataType } from '../interfaces/data-type';
 import { ResourceDataTypeHelper } from '../interfaces/data-type-helper';
 import { ResourceDataBaseHelper } from './base.helper';
@@ -14,16 +14,18 @@ export class RelationDataTypeHelper
     validate(
         value: DataType.RelationValue,
         field: DataType.RelationField,
+        update: boolean,
     ): boolean {
-        super.validate(value, field);
+        super.validate(value, field, update);
+        if (update && typeof value === 'undefined') return true;
 
         if (field.options.type === 'many-to-one' && !this.isListValid(value))
-            throw new DataValidationException(
+            throw new FieldValidationException(
                 `Relation field ${field.name} expects a list of objects with IDs: Eg.: [ { _id: '1723982387123987' } ]`,
             );
 
         if (field.options.type === 'one-to-many' && !this.isSingleValid(value))
-            throw new DataValidationException(
+            throw new FieldValidationException(
                 `Relation field ${field.name} expects an object with IDs: Eg.: { _id: '1723982387123987' }`,
             );
 
