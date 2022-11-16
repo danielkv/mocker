@@ -32,7 +32,7 @@ export class ResourceDataGeneratorService {
                 if (!generator)
                     throw new Error("Generator Provider doesn't exist");
 
-                const value = generator.generate(field.options);
+                const value = generator.generate(field);
 
                 row[field.name] = value;
 

@@ -9,16 +9,12 @@ import { DeleteResult } from '@shared/interfaces/responses';
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { Resource } from './entities/resource.entity';
-import { ResourceField } from './interfaces/resource-field';
-import { ResourceUtils } from './utils/genericResourceUtils';
 
 @Injectable()
 export class ResourceService {
     constructor(
         @InjectModel(Resource.name, MAIN_CONN)
         private resourceRepository: Model<Resource>,
-
-        private genericResourceUtils: ResourceUtils,
     ) {}
 
     private createResourceCollectionName(

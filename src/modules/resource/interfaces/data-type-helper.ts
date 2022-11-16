@@ -1,27 +1,29 @@
-export type ResourceFieldType =
-    | 'string'
-    | 'oneof'
-    | 'number'
-    | 'boolean'
-    | 'relation';
+import { DataType } from '../interfaces/data-type';
 
-export const ResourceFieldTypeArr: ResourceFieldType[] = [
-    'string',
-    'oneof',
-    'number',
-    'boolean',
-    'relation',
-];
+export interface ResourceDataTypeHelper<
+    Field extends DataType.ResourceField = DataType.ResourceField,
+    Value = any,
+> {
+    /**
+     * Checks if the value meets the requirements of the data type.
+     * Throws a DataValidationException in case is not valid
+     * Returns true in case of valid
+     *
+     * @param value Value of the field
+     * @param options Field options
+     */
+    validate(value: Value, field: Field): boolean;
 
-export interface ResourceDataTypeHelper<Options = any, Response = any> {
-    generate(options: Options): Response;
+    /**
+     * Generate the random data from options and field type
+     *
+     * @param value Value of the field
+     * @param field Field options
+     */
+    generate(field: Field): Value;
 }
 
 export type DataTypeHelperProviders = Record<
-    ResourceFieldType,
+    DataType.FieldType,
     ResourceDataTypeHelper
 >;
-
-export type GeneratorOptionSingleType = boolean | string | number;
-
-export type GeneratorOptionType = Record<string, GeneratorOptionSingleType>;

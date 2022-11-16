@@ -4,7 +4,7 @@ import { Schema as SchemaTypes } from 'mongoose';
 
 import { BaseSchema } from '@shared/db/BaseSchema';
 
-import { ResourceField } from '../interfaces/resource-field';
+import { DataType } from '../interfaces/data-type';
 
 export type ResourceDocument = Resource & Document;
 
@@ -20,7 +20,7 @@ export class Resource extends BaseSchema {
     path: string;
 
     @Prop({ type: [SchemaTypes.Types.Mixed], required: true })
-    fields: ResourceField[];
+    fields: DataType.ResourceField[];
 
     @Prop({ required: true })
     projectId: string;

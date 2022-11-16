@@ -6,7 +6,7 @@ import { Connection, Model, Schema, SchemaDefinition } from 'mongoose';
 import { DATA_CONN, MAIN_CONN } from '@shared/db/config';
 
 import { Resource } from './entities/resource.entity';
-import { RelationField, ResourceField } from './interfaces/resource-field';
+import { DataType } from './interfaces/data-type';
 import { ResourceData } from './interfaces/resources';
 import { ResourceUtils } from './utils/genericResourceUtils';
 
@@ -43,7 +43,7 @@ export class ResourceDataModelService {
     }
 
     buildRelationsSchema(
-        fields: RelationField[],
+        fields: DataType.RelationField[],
     ): Promise<Model<ResourceData>[]> {
         const promises = fields.map((field) => {
             const resourceId = field.options.resourceId;
@@ -54,7 +54,7 @@ export class ResourceDataModelService {
         return Promise.all(promises);
     }
 
-    buildSchema(fields: ResourceField[]): Schema<ResourceData> {
+    buildSchema(fields: DataType.ResourceField[]): Schema<ResourceData> {
         const schemaFields: SchemaDefinition = {};
 
         for (let i = 0; i < fields.length; i++) {

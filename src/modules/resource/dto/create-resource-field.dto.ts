@@ -1,10 +1,6 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
-import {
-    ResourceFieldType,
-    ResourceFieldTypeArr,
-} from '../interfaces/data-type-helper';
-import { FieldOptions } from '../interfaces/field-options';
+import { DataType } from '../interfaces/data-type';
 
 export class CreateResourceFieldDto {
     @IsString()
@@ -12,8 +8,8 @@ export class CreateResourceFieldDto {
     name: string;
 
     @IsNotEmpty()
-    @IsEnum(ResourceFieldTypeArr)
-    type: ResourceFieldType;
+    //@IsEnum(DataType.FieldTypeArr)
+    type: DataType.FieldType;
 
-    options?: FieldOptions;
+    options?: DataType.FieldOptions;
 }
