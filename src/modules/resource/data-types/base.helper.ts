@@ -19,18 +19,22 @@ export abstract class ResourceDataBaseHelper {
                     throw new FieldValidationException(
                         `Field ${field.name} expects a boolean value`,
                     );
+                break;
             case 'number':
                 if (typeof value !== 'number')
                     throw new FieldValidationException(
                         `Field ${field.name} expects a number value`,
                     );
+                break;
             case 'string':
                 if (typeof value !== 'string')
                     throw new FieldValidationException(
                         `Field ${field.name} expects a string value`,
                     );
+                break;
             default:
                 return true;
         }
+        return true;
     }
 }
