@@ -19,4 +19,6 @@ export class User extends BaseSchema {
     password: string;
 }
 
+export type UserWithoutPassword = Omit<User, 'password'>;
+
 export const UserSchema = SchemaFactory.createForClass(User);

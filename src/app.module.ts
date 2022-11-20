@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { DATA_CONN, MAIN_CONN } from '@shared/db/config';
 
+import { AuthModule } from './modules/auth/auth.module';
 import { ProjectModule } from './modules/project/project.module';
 import { ResourceModule } from './modules/resource/resource.module';
 import { UserModule } from './modules/user/user.module';
@@ -32,6 +33,7 @@ import { UserModule } from './modules/user/user.module';
                 uri: config.get('DATA_MONGO_URL'),
             }),
         }),
+        AuthModule,
     ],
     controllers: [],
 })
