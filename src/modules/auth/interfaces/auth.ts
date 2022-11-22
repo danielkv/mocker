@@ -6,7 +6,7 @@ export interface LoginRequest extends Request {
 
 type AuthenticatedUserData = Pick<
     UserWithoutPassword,
-    '_id' | 'email' | 'name'
+    '_id' | 'email' | 'name' | 'admin'
 >;
 
 export interface AuthenticatedRequest extends Request {
@@ -17,4 +17,7 @@ export interface JwtTokenPayload {
     sub: string; // userId
     email: string;
     name: string;
+    admin: boolean;
 }
+
+export type Policy = 'admin' | 'authenticated' | 'public';
