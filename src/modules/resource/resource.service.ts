@@ -33,8 +33,8 @@ export class ResourceService {
         });
     }
 
-    findAll(): Promise<Resource[]> {
-        return this.resourceRepository.find().exec();
+    findAllByUser(userId: string): Promise<Resource[]> {
+        return this.resourceRepository.find({ userId }).exec();
     }
 
     findOne(id: string): Promise<Resource> {

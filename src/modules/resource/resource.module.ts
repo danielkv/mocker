@@ -3,6 +3,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { MAIN_CONN } from '@shared/db/config';
 
+import { AbilityFactory } from '@modules/auth/ability.factory';
+
 import { DATA_TYPE_HELPERS_PROVIDER } from './data-types';
 import { Resource, ResourceSchema } from './entities/resource.entity';
 import { ResourceDataHelperService } from './resource-data-helper.service';
@@ -22,6 +24,7 @@ import { ResourceUtils } from './utils/genericResourceUtils';
     ],
     controllers: [ResourceController, ResourceDataController],
     providers: [
+        AbilityFactory,
         ResourceService,
         ResourceDataHelperService,
         ResourceUtils,

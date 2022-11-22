@@ -26,6 +26,9 @@ export class Resource extends BaseSchema {
     projectId: string;
 
     @Prop({ required: true })
+    userId: string;
+
+    @Prop({ required: true })
     collectionName: string;
 }
 
