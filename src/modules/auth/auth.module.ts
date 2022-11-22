@@ -6,7 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 
 import { UserModule } from '@modules/user/user.module';
 
-import { CaslAbilityFactory } from './ability.factory';
+import { AbilityFactory } from './ability.factory';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt.guard';
@@ -28,7 +28,7 @@ import { LocalStrategy } from './local.strategy';
         }),
     ],
     providers: [
-        CaslAbilityFactory,
+        AbilityFactory,
         AuthService,
         LocalStrategy,
         JwtStrategy,

@@ -21,7 +21,7 @@ type Subjects =
 export type AppAbility = PureAbility<[Action, Subjects]>;
 
 @Injectable()
-export class CaslAbilityFactory {
+export class AbilityFactory {
     createForUser(user: User) {
         const { can, build } = new AbilityBuilder<
             PureAbility<[Action, Subjects]>

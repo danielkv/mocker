@@ -4,7 +4,7 @@ export interface LoginRequest extends Request {
     user: UserWithoutPassword;
 }
 
-type AuthenticatedUserData = Pick<
+export type AuthenticatedUserData = Pick<
     UserWithoutPassword,
     '_id' | 'email' | 'name' | 'admin'
 >;
