@@ -4,3 +4,11 @@ export declare interface DeleteResult {
     /** The number of documents that were deleted */
     deletedCount: number;
 }
+
+export interface PaginatedResponse<Item extends Record<string, any>> {
+    totalItems: number;
+    currentPage: number;
+    nextPage: number | null;
+    totalPages: number;
+    items: Item[];
+}

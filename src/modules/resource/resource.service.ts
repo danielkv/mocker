@@ -1,12 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 
 import { MAIN_CONN } from '@shared/db/config';
-import { DeleteResult } from '@shared/interfaces/responses';
+import {
+    buildPaginatedResponse,
+    getLimitOffset,
+    getPagination,
+} from '@shared/helpers/pagination';
+import { DeleteResult, PaginatedResponse } from '@shared/interfaces/responses';
 
 import { CreateResourceDto } from './dto/create-resource.dto';
+import { ResourceQueryDto } from './dto/resource-fields.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { Resource } from './entities/resource.entity';
 
@@ -23,6 +29,17 @@ export class ResourceService {
         return `${createResourceDto.projectId}-${createResourceDto.path}`;
     }
 
+    private buildFilterQuery(
+        requestQuery?: ResourceQueryDto,
+        initialQuery?: FilterQuery<Resource>,
+    ): FilterQuery<Resource> {
+        const query: FilterQuery<Resource> = initialQuery || {};
+        if (requestQuery.name) query.name = { $regex: requestQuery.name };
+        if (requestQuery.projectId) query.projectId = requestQuery.projectId;
+
+        return query;
+    }
+
     create(createResourceDto: CreateResourceDto): Promise<Resource> {
         const collectionName =
             this.createResourceCollectionName(createResourceDto);
@@ -33,8 +50,23 @@ export class ResourceService {
         });
     }
 
-    findAllByUser(userId: string): Promise<Resource[]> {
-        return this.resourceRepository.find({ userId }).exec();
+    async findAll(
+        requestQuery?: ResourceQueryDto,
+    ): Promise<PaginatedResponse<Resource>> {
+        const query = this.buildFilterQuery(requestQuery);
+
+        const totalItems = await this.resourceRepository.find(query).exec();
+
+        const pagination = getPagination(requestQuery);
+        const { limit, offset } = getLimitOffset(pagination);
+
+        const items = await this.resourceRepository
+            .find(query)
+            .skip(offset)
+            .limit(limit)
+            .exec();
+
+        return buildPaginatedResponse(items, totalItems.length, pagination);
     }
 
     findOne(id: string): Promise<Resource> {

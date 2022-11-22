@@ -11,12 +11,15 @@ import {
     UseGuards,
 } from '@nestjs/common';
 
+import { PaginatedResponse } from '@shared/interfaces/responses';
+
 import { PolicesGuard } from '@modules/auth/guards/polices.guard';
 import { CheckPolicies } from '@modules/auth/helpers/auth';
 import { AuthenticatedRequest } from '@modules/auth/interfaces/auth';
 import { Action } from '@modules/auth/interfaces/authorization';
 
 import { CreateResourceDto } from './dto/create-resource.dto';
+import { ResourceQueryDto } from './dto/resource-fields.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { Resource } from './entities/resource.entity';
 import { ResourceDataHelperService } from './resource-data-helper.service';
@@ -37,8 +40,14 @@ export class ResourceController {
 
     @CheckPolicies((ability) => ability.can(Action.Read, Resource))
     @Get()
-    findAll(@Request() req: AuthenticatedRequest) {
-        return this.resourceService.findAllByUser(req.user._id);
+    findAll(
+        @Request() req: AuthenticatedRequest,
+        @Query() requestQuery: ResourceQueryDto,
+    ): Promise<PaginatedResponse<Resource>> {
+        if (!req.ability.can(Action.Manage, Resource))
+            requestQuery.userId = req.user._id;
+
+        return this.resourceService.findAll(requestQuery);
     }
 
     @Get(':id')

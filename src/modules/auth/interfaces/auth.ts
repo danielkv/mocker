@@ -1,5 +1,7 @@
 import { UserWithoutPassword } from '@modules/user/entities/user.entity';
 
+import { AppAbility } from '../ability.factory';
+
 export interface LoginRequest extends Request {
     user: UserWithoutPassword;
 }
@@ -11,6 +13,7 @@ export type AuthenticatedUserData = Pick<
 
 export interface AuthenticatedRequest extends Request {
     user: AuthenticatedUserData;
+    ability: AppAbility;
 }
 
 export interface JwtTokenPayload {

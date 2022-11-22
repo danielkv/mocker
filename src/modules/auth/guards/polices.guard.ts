@@ -13,9 +13,9 @@ export class PolicesGuard implements CanActivate {
     ) {}
 
     canActivate(context: ExecutionContext) {
-        const { user } = context.switchToHttp().getRequest();
+        const req = context.switchToHttp().getRequest();
 
-        if (!user) return false;
+        if (!req.user) return false;
 
         const policyHandlers =
             this.reflector.get<PolicyHandler[]>(
@@ -23,7 +23,9 @@ export class PolicesGuard implements CanActivate {
                 context.getHandler(),
             ) || [];
 
-        const ability = this.caslAbilityFactory.createForUser(user);
+        const ability = this.caslAbilityFactory.createForUser(req.user);
+
+        req.ability = ability;
 
         return policyHandlers.every((handler) =>
             this.execPolicyHandler(handler, ability),
