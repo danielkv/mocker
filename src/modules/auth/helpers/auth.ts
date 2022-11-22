@@ -1,8 +1,11 @@
 import { SetMetadata } from '@nestjs/common';
 
-import { Policy } from '../interfaces/auth';
+import { PolicyHandler } from '../interfaces/authorization';
 
-export const AUTH_POLICY = 'AUTH_POLICY';
+export const IS_PUBLIC_KEY = 'isPublic';
 
-export const AuthPolicy = (policy?: Policy) =>
-    SetMetadata(AUTH_POLICY, policy || 'authenticated');
+export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
+
+export const CHECK_POLICIES_KEY = 'check_policy';
+export const CheckPolicies = (...handlers: PolicyHandler[]) =>
+    SetMetadata(CHECK_POLICIES_KEY, handlers);
